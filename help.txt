@@ -1,0 +1,10 @@
+<div className="flex flex-col">
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)}>
+          <div className="flex md:flex-row sm:flex-col  gap-4">
+            <div className=" bg-blue-500 text-white p-4 w-full">Item 1</div>
+            <div className=" bg-green-500 text-white p-4 w-full">Item 2</div>
+          </div>
+        </form>
+      </Form>
+    </div>

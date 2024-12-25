@@ -1,4 +1,4 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+Nextjs (Frontend & Backend), PostgreSQL, Shadcn (tailwindcss)
 
 ## Getting Started
 
@@ -14,23 +14,19 @@ pnpm dev
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Technology:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Nextjs (Frontend & Backend), PostgreSQL, Shadcn (tailwindcss)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+an e-commerce platform where different product categories have unique attributes. For instance, a "mobile phone" might have attributes like "memory" and "screen size," while a "garment" might have attributes like "color" and "size." This variability makes it challenging to create a rigid, one-size-fits-all attribute system.
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+To handle the diverse attributes of different product categories, we're using a flexible approach. We've created different "content types" (like "mobile phone" and "garment") to define the specific attributes for each category. This allows us to dynamically generate forms for sellers to add products, ensuring that only relevant attributes are displayed. The attribute data for each product will be stored in a database using a format that can handle various types of information.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Chalanges:
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. Filtering data according to attributes
+2. Price varibales according to attributes
