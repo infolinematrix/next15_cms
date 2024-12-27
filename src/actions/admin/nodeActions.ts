@@ -1,12 +1,33 @@
 //--Actions
 "use server";
 import { db } from "@/db";
-import { nodes, NodeType } from "@/db/schema/node";
+import {
+  nodeProperties,
+  NodePropertiesType,
+  nodes,
+  NodeType,
+} from "@/db/schema/node";
 import { revalidatePath } from "next/cache";
 import path from "path";
 import { mkdir, stat, unlink, writeFile } from "fs/promises";
 import { eq } from "drizzle-orm";
 import { findNode } from "@/db/queries/nodeQueries";
+import { NodeModel, NodeObject } from "@/lib/node";
+
+export const getNodeWithProperties = async (nodeId: string): Promise<any> => {
+  try {
+    const data = await db.query.nodes.findFirst({
+      where: eq(nodes.id, nodeId),
+      with: { properties: true },
+    });
+
+    const properties = data?.properties;
+
+    return [data, properties];
+  } catch (error) {
+    throw Error;
+  }
+};
 
 /**
  * Creates a new node action with the provided data.
@@ -15,57 +36,7 @@ import { findNode } from "@/db/queries/nodeQueries";
  * @returns A promise that resolves when the node action is created.
  * @throws Will throw an error if the creation process fails.
  */
-export const createNodeAction = async (data: any): Promise<void> => {
-  try {
-    let fileUrl;
-
-    if (data.image) {
-      const file: File | null = data.image as unknown as File;
-      if (!file) throw new Error("No file uploaded");
-
-      const buffer = Buffer.from(await file.arrayBuffer());
-      const filename = Date.now() + file.name.replaceAll(" ", "_");
-      const uploadPath = path.join(process.cwd(), "/public/uploads/");
-      try {
-        await stat(uploadPath);
-      } catch (e: any) {
-        if (e.code === "ENOENT") {
-          await mkdir(uploadPath, { recursive: true });
-        } else {
-          console.error(
-            "Error while trying to create directory when uploading a file\n",
-            e
-          );
-          throw e;
-        }
-      }
-
-      try {
-        await writeFile(`${uploadPath}/${filename}`, buffer);
-        fileUrl = `uploads/${filename}`;
-      } catch (e) {
-        console.error("Error while trying to upload a file\n", e);
-        throw e;
-      }
-      //---
-    }
-    const newData = {
-      name: data.name,
-      identifier: data.identifier,
-      status: data.status,
-      shortDescription: data.short_description,
-      nodeType: data.nodeType,
-      image: fileUrl,
-    } as NodeType;
-
-    // console.log(newData);
-
-    await db.insert(nodes).values(newData);
-    revalidatePath("/admin/node");
-  } catch (error) {
-    throw error;
-  }
-};
+export const createNodeAction = async (data: any): Promise<void> => {};
 
 /**
  * Deletes a node action with the provided id.

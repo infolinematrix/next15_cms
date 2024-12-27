@@ -208,7 +208,7 @@ export default function CategoryUpdateForm({ id, data, categories }: Props) {
                         dropzoneOptions={dropZoneConfig}
                         className="bg-background rounded-lg p-2"
                         onDrop={(files: any) => {
-                          const fileUrl = URL.createObjectURL(files[0]);
+                          // const fileUrl = URL.createObjectURL(files[0]);
                           // console.log("File Name---------", fileUrl);
                         }}
                       >

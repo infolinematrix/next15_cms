@@ -5,14 +5,16 @@ import {
   text,
   index,
   jsonb,
+  primaryKey,
 } from "drizzle-orm/pg-core";
 import { NodeStatus } from "@/lib/node";
 import { lifecycleDates } from "../utils";
+import { InferSelectModel, relations } from "drizzle-orm";
 
 export const nodes = pgTable(
   "nodes",
   {
-    id: uuid("id").defaultRandom().primaryKey(),
+    id: uuid("id").defaultRandom().primaryKey().notNull(),
     name: varchar("name", { length: 255 }).notNull(),
     identifier: varchar("identifier", { length: 255 }).notNull(),
     status: varchar("status", { length: 25 }).notNull().$type<NodeStatus>(),
@@ -31,30 +33,15 @@ export const nodes = pgTable(
   ]
 );
 
-export const nodeImages = pgTable(
-  "node_images",
-  {
-    id: uuid("id").defaultRandom().primaryKey(),
-    nodeId: uuid("node_id")
-      .references(() => nodes.id)
-      .notNull(),
-    imageUrl: varchar("image_url", { length: 255 }).notNull(),
-    ...lifecycleDates,
-  },
-  (table) => [
-    {
-      nodeIdIndex: index("node_id_idx").on(table.nodeId),
-    },
-  ]
-);
-
 export const nodeProperties = pgTable(
   "node_properties",
   {
-    id: uuid("id").defaultRandom().primaryKey(),
-    nodeId: uuid("node_id").references(() => nodes.id, {
-      onDelete: "cascade",
-    }),
+    id: uuid("id").defaultRandom().primaryKey().notNull(),
+    nodeId: uuid("nodeId")
+      .notNull()
+      .references(() => nodes.id, {
+        onDelete: "restrict",
+      }),
     property: varchar("property", { length: 100 }).notNull(),
     propertyValue: jsonb("property_value").notNull(),
 
@@ -73,3 +60,15 @@ export const nodeProperties = pgTable(
 
 export type NodeType = typeof nodes.$inferSelect;
 export type NodePropertiesType = typeof nodeProperties.$inferSelect;
+
+// //------- Relations -- you have to make both side relation
+export const nodesRelations = relations(nodes, ({ one, many }) => ({
+  properties: many(nodeProperties),
+}));
+
+export const propertiesRelations = relations(nodeProperties, ({ one }) => ({
+  node: one(nodes, {
+    fields: [nodeProperties.nodeId],
+    references: [nodes.id],
+  }),
+}));

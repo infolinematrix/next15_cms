@@ -1,8 +1,9 @@
 // Adjust the import path as needed
-import { nodeImages, nodes, NodeType } from "@/db/schema/node";
+
 import { NodeStatus } from "@/lib/node";
 import { db } from "..";
 import { eq } from "drizzle-orm";
+import { nodes, NodeType } from "../schema/node";
 
 const nodeId = "f5c0778f-fe15-4968-ad65-e599bd04a43a"; // Replace with the actual node ID
 
@@ -40,28 +41,28 @@ export const fetchNodesWithPagination = async () => {
   }
 };
 
-export const fetchImages = async () => {
-  try {
-    const images = await db
-      .select()
-      .from(nodeImages)
-      .where(eq(nodeImages.nodeId, nodeId));
-    return images;
-  } catch (error) {
-    console.error("Error fetching images:", error);
-    throw new Error("Unable to fetch images");
-  }
-};
+// export const fetchImages = async () => {
+//   try {
+//     const images = await db
+//       .select()
+//       .from(nodeImages)
+//       .where(eq(nodeImages.nodeId, nodeId));
+//     return images;
+//   } catch (error) {
+//     console.error("Error fetching images:", error);
+//     throw new Error("Unable to fetch images");
+//   }
+// };
 
-export const publishedNodes = await db
-  .select()
-  .from(nodes)
-  .where(eq(nodes.status, NodeStatus.PUBLISHED))
-  .execute();
+// export const publishedNodes = await db
+//   .select()
+//   .from(nodes)
+//   .where(eq(nodes.status, NodeStatus.PUBLISHED))
+//   .execute();
 
-export const nodeWithImages = await db
-  .select()
-  .from(nodes)
-  .leftJoin(nodeImages, eq(nodeImages.nodeId, nodes.id))
-  .where(eq(nodes.id, nodeId))
-  .execute();
+// export const nodeWithImages = await db
+//   .select()
+//   .from(nodes)
+//   .leftJoin(nodeImages, eq(nodeImages.nodeId, nodes.id))
+//   .where(eq(nodes.id, nodeId))
+//   .execute();

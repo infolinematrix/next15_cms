@@ -27,34 +27,34 @@ export const AllowedNodeTypes = {
   COSMETIC: "Cosmetics",
 };
 
-export function createObjectFromClassName(className: string) {
-  // if (!(className in content)) {
-  //   throw new Error(`Class ${className} does not exist in content module`);
-  // }
+// export function createObjectFromClassName(className: string) {
+//   // if (!(className in content)) {
+//   //   throw new Error(`Class ${className} does not exist in content module`);
+//   // }
 
-  const d = Object.entries(content).find(([key]) => key === className)?.[1];
-  if (!d) {
-    throw new Error(`Class ${className} does not exist in content module`);
-  }
-  console.log(d);
+//   const d = Object.entries(content).find(([key]) => key === className)?.[1];
+//   if (!d) {
+//     throw new Error(`Class ${className} does not exist in content module`);
+//   }
+//   console.log(d);
 
-  // const contentClasses: { [key: string]: any } = {
-  const nodeInstance = new d();
-  //   // Add other classes here
-  // };
-  // const nodeInstance = new d();
-  // console.log(d);
-  // if (!(className in contentClasses)) {
-  //   throw new Error(`Class ${className} does not exist in content module`);
-  // }
+//   // const contentClasses: { [key: string]: any } = {
+//   const nodeInstance = new d();
+//   //   // Add other classes here
+//   // };
+//   // const nodeInstance = new d();
+//   // console.log(d);
+//   // if (!(className in contentClasses)) {
+//   //   throw new Error(`Class ${className} does not exist in content module`);
+//   // }
 
-  // const nodeInstance = new contentClasses[className]();
-  console.log(nodeInstance);
+//   // const nodeInstance = new contentClasses[className]();
+//   console.log(nodeInstance);
 
-  return ["", ""];
-}
+//   return ["", ""];
+// }
 
-// export class Node {
+// export class NodeClass {
 //   id: string;
 //   name: string;
 //   createdAt: Date;
@@ -71,6 +71,159 @@ export function createObjectFromClassName(className: string) {
 //     this.status = null;
 //     this.nodeType = "";
 //   }
+// }
+
+interface RootObject {
+  id: string;
+  name: string;
+  identifier: string;
+  status: string;
+  nodeType: string;
+  shortDescription: string;
+  image: string;
+  createdAt: string;
+  updatedAt: string;
+  properties: Property[];
+}
+interface Property {
+  id: string;
+  nodeId: string;
+  property: string;
+  propertyValue: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export class NodeObject<RootObject> {
+  private node: object;
+
+  constructor(node: object) {
+    this.node = node;
+  }
+
+  getProperties = (propery: string) => {
+    return this.node;
+  };
+}
+
+export class NodeModel {
+  id?: string;
+  name?: string;
+  identifier?: string;
+  status?: string;
+  nodeType?: string;
+  shortDescription?: string;
+  image?: string;
+  createdAt?: string;
+  updatedAt?: string;
+  properties?: Properties[];
+
+  constructor(
+    id?: string,
+    name?: string,
+    identifier?: string,
+    status?: string,
+    nodeType?: string,
+    shortDescription?: string,
+    image?: string,
+    createdAt?: string,
+    updatedAt?: string,
+    properties?: Properties[]
+  ) {
+    this.id = id;
+    this.name = name;
+    this.identifier = identifier;
+    this.status = status;
+    this.nodeType = nodeType;
+    this.shortDescription = shortDescription;
+    this.image = image;
+    this.createdAt = createdAt;
+    this.updatedAt = updatedAt;
+    this.properties = properties;
+  }
+
+  static fromJson(json: Record<string, any>): NodeModel {
+    const properties = json.properties
+      ? json.properties.map((v: any) => Properties.fromJson(v))
+      : undefined;
+    return new NodeModel(
+      json.id,
+      json.name,
+      json.identifier,
+      json.status,
+      json.nodeType,
+      json.shortDescription,
+      json.image,
+      json.createdAt,
+      json.updatedAt,
+      properties
+    );
+  }
+
+  toJson(): Record<string, any> {
+    const data: Record<string, any> = {};
+    data.id = this.id;
+    data.name = this.name;
+    data.identifier = this.identifier;
+    data.status = this.status;
+    data.nodeType = this.nodeType;
+    data.shortDescription = this.shortDescription;
+    data.image = this.image;
+    data.createdAt = this.createdAt;
+    data.updatedAt = this.updatedAt;
+    if (this.properties) {
+      data.properties = this.properties.map((v) => v.toJson());
+    }
+    return data;
+  }
+}
+
+class Properties {
+  id?: string;
+  nodeId?: string;
+  property?: string;
+  propertyValue?: string;
+  createdAt?: string;
+  updatedAt?: string;
+
+  constructor(
+    id?: string,
+    nodeId?: string,
+    property?: string,
+    propertyValue?: string,
+    createdAt?: string,
+    updatedAt?: string
+  ) {
+    this.id = id;
+    this.nodeId = nodeId;
+    this.property = property;
+    this.propertyValue = propertyValue;
+    this.createdAt = createdAt;
+    this.updatedAt = updatedAt;
+  }
+
+  static fromJson(json: Record<string, any>): Properties {
+    return new Properties(
+      json.id,
+      json.nodeId,
+      json.property,
+      json.propertyValue,
+      json.createdAt,
+      json.updatedAt
+    );
+  }
+
+  toJson(): Record<string, any> {
+    const data: Record<string, any> = {};
+    data.id = this.id;
+    data.nodeId = this.nodeId;
+    data.property = this.property;
+    data.propertyValue = this.propertyValue;
+    data.createdAt = this.createdAt;
+    data.updatedAt = this.updatedAt;
+    return data;
+  }
+}
 
 //   static async create(id: string): Promise<Node> {
 //     const node = new Node(id);

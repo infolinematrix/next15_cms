@@ -31,7 +31,7 @@ const DashboardLayout = ({ children }: any) => {
               options={{ showSpinner: true }}
               shallowRouting
             />
-            <div className="flex xl:w-2/3 flex-col px-5 w-full">{children}</div>
+            <div className="flex xl:w-2/3 flex-col p-4 w-full">{children}</div>
             <div className=" xl:w-1/3 hidden xl:block  flex-col border-l h-screen border-border translate-x-0 bg-backgroun w-full p-2">
               Help
             </div>
